@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37710.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HL7_FHIR_介接", "HL7_FHIR_介接.csproj", "{19FCA54B-D2EB-4344-998A-AE71D3C67937}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19FCA54B-D2EB-4344-998A-AE71D3C67937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19FCA54B-D2EB-4344-998A-AE71D3C67937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19FCA54B-D2EB-4344-998A-AE71D3C67937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19FCA54B-D2EB-4344-998A-AE71D3C67937}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7BB8E7D2-D101-4440-84AD-8EB0C76EA0D5}
+	EndGlobalSection
+EndGlobal

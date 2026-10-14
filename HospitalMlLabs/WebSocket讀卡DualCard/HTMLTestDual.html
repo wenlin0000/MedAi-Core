@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>🏥 聯新國際醫院 Web-HIS 診間讀卡預審測試面板</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 30px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
+        h2 { color: #1a5f7a; border-bottom: 2px solid #e1e8ed; padding-bottom: 10px; }
+        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .online { background: #e8f5e9; color: #2e7d32; }
+        .offline { background: #ffebee; color: #c62828; }
+        input[type="password"] { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { background: #1a5f7a; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 16px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        button:hover { background: #154c61; }
+        pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🏥 聯新 Web-HIS 前端診間模擬系統</h2>
+    <p>通訊端點：<code style="color: #c7254e;">ws://localhost:8181</code></p>
+    <p>通訊狀態：<span id="connStatus" class="status-badge offline">❌ 斷線隔離</span></p>
+    
+    <label for="pinCode">🔒 醫師醫事卡 PIN 碼（預設為 123456）：</label>
+    <input type="password" id="pinCode" placeholder="請輸入 6 碼晶片密碼" value="123456">
+    
+    <button onclick="sendVerifyRequest()">🚀 點擊執行電子簽章（實體底層讀卡交握）</button>
+    
+    <h3>網路層回條日誌（WebSocket JSON Stream）：</h3>
+    <pre id="logTerminal">等待網頁初始化掛載...</pre>
+</div>
+
+<script>
+    // 🌟 1. 網頁一開啟，前端 JavaScript 瞬間穿越沙盒，直連 C# 地端常駐伺服器
+    const socket = new WebSocket("ws://localhost:8181");
+    const logTerminal = document.getElementById("logTerminal");
+    const connStatus = document.getElementById("connStatus");
+
+    // 監聽連線開啟
+    socket.onopen = () => {
+        connStatus.className = "status-badge online";
+        connStatus.innerText = "🟢 隧道已開通 (連線地端 C#)";
+        logTerminal.innerText = "✨ [WebSocket 隧道建立成功]：等待臨床醫師下達開藥簽章請求...";
+    };
+
+    // 監聽連線斷開
+    socket.onclose = () => {
+        connStatus.className = "status-badge offline";
+        connStatus.innerText = "❌ 斷線隔離";
+        logTerminal.innerText = "⚠️ [提示] 已與地端常駐 WebSocket 服務斷開連線。請確認 C# 專案是否有執行啟動。";
+    };
+
+    // 🌟 2. 醫師在網頁點擊簽章，將密碼包裝成強型別 JSON 非同步推給 C# 
+    function sendVerifyRequest() {
+        const pinValue = document.getElementById("pinCode").value;
+        const payload = {
+            Action: "VERIFY_DUAL_CARDS",
+            PinCode: pinValue
+        };
+        
+        logTerminal.innerText = `>> [發送封包] 向 ws://localhost:8181 拋送二進位流：\n${JSON.stringify(payload, null, 2)}`;
+        socket.send(JSON.stringify(payload));
+    }
+
+    // 🌟 3. 監聽 C# 背景執行緒實體敲完 HCA 晶片卡後，超音速推回來的答案
+    socket.onmessage = (event) => {
+        const responseData = JSON.parse(event.data);
+        logTerminal.innerText += `\n\n<< [接收封包] 地端背景 C# 微服務秒級回推標頭：\n${JSON.stringify(responseData, null, 2)}`;
+        
+        if (responseData.Status === "SUCCESS") {
+            logTerminal.innerText += `\n\n🎉【臨床解鎖成功】簽章醫師識別碼：${responseData.DoctorId}\n網頁 UI 欄位已自動解除唯讀，允許開立健保限制性醫囑！`;
+            alert(result.Message + "\n簽章醫師: " + result.DoctorId + "\n病患姓名: " + result.PatientName + "\n健保卡號: " + result.PatientNhiId);
+        }
+    };
+</script>
+
+</body>
+</html>
