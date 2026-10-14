@@ -69,15 +69,8 @@ class Program
         string jsonPayload = JsonSerializer.Serialize(requestPayload);
 
         // 🌟【唯一金鑰與網址宣告區】：確保全專案只有這一個唯一的正確位址！
-        //string apiKey = "AQ.Ab8RN6K37RYE2CM9hnovw63hhNaW_RDukXRgyoEPPbmkm2bozA";
-        //string geminiApiUrl = $"https://googleapis.com{apiKey}";
-        // ❌ 拔除所有帶有 $ 符號的動態字串拼接，防止背地裡有舊變數在作怪：
-        // string geminiApiUrl = $"https://googleapis.com...";
-
-        //       👇
-
-        // ✅ 直接改用這行純字串。這行字串在 C# 語法中具有最高優先權，能強制修正所有黏在一起的魔王！
-        string geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=AQ.Ab8RN6K37RYE2CM9hnovw63hhNaW_RDukXRgyoEPPbmkm2bozA";
+        string apiKey = "API_KEY";
+        string geminiApiUrl = $"https://googleapis.com{apiKey}";
 
         Console.WriteLine("\n[步驟 2/3] 醫療雲端大腦：正在連線至 Google 官方安控網域 443 埠口...");
 

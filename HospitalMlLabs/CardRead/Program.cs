@@ -365,7 +365,9 @@ new { text = $"病歷號: {hisRecord.PatientId}, 姓名: {hisRecord.PatientName}
             generationConfig = new { temperature = 0.1 }
         };
         string jsonPayload = JsonSerializer.Serialize(requestPayload);
-        string geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=AQ.Ab8RN6K37RYE2CM9hnovw63hhNaW_RDukXRgyoEPPbmkm2bozA";
+        // 🌟【唯一金鑰與網址宣告區】：確保全專案只有這一個唯一的正確位址！
+        string apiKey = "API_KEY";
+        string geminiApiUrl = $"https://googleapis.com{apiKey}";
         Console.WriteLine("\n[中央 AI 程序] 正在透過 443 加密管道，將實體 HCA、Dapper、與 Otsu 特徵上傳至 Gemini 2.5 大腦...");
         using var handler = new HttpClientHandler();
         try { handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true; } catch { }
